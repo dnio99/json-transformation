@@ -113,11 +113,16 @@ object JsContextPool {
       for {
         jsContextConfig <- ZIO.serviceWith[Configuration](_.jsContextConfig)
 
+        poolSize = jsContextConfig
+          .flatMap(_.poolSize)
+          .filter(_ >= 1)
+          .getOrElse(10)
+
         ids = Range
-          .apply(1, jsContextConfig.flatMap(_.poolSize).getOrElse(10))
+          .apply(0, poolSize)
           .map(n => s"js-context-pool-${n}")
 
-        jsContexts <- ZIO.foreach(
+        jsContexts <- ZIO.foreachPar(
           ids
         )(id =>
           for {
@@ -126,7 +131,7 @@ object JsContextPool {
             _ <- ZIO.logInfo(s"init js context id:${id} success!")
 
           } yield JsContext(id = id, context = context)
-        )
+        ).withParallelism(64)
 
         res <- Ref.make(
           jsContexts.toVector
