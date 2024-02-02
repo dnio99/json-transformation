@@ -53,7 +53,6 @@ object SystemRoutes {
             DomainErrors.InternalServerError("转换异常！", Some(e.getMessage))
           )
       )
-      _ <- ZIO.logWarning(res.noSpaces)
     } yield res
 
   }
