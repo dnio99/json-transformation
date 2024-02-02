@@ -1,0 +1,45 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Scala template
+*.class
+*.log
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+.idea
+*.iml
+gen
+### PlayFramework template
+# Ignore Play! working directory #
+bin/
+/db
+.eclipse
+/lib/
+/logs/
+/project/project
+/project/target
+/target
+.metals
+.bloop
+/core/src/main/target
+/modules/*/target
+/modules/*/project/target
+/modules/*/project/project/target
+/venv
+/protobuf
+tmp/
+server.pid
+*.eml
+/dist/
+.cache
+/src/main/resources/local.conf
+/src/main/resources/prod.conf
+
+.vscode/
+/init-sql/postgres/transmitter
+
+/queries.sql
+# sbt 1.4 +
+.bsp/
+target/
+**/.DS_Store
