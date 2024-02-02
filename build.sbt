@@ -4,6 +4,7 @@ lazy val root = (project in file("."))
   .enablePlugins(BuildInfoPlugin, DockerPlugin, JavaAppPackaging, JavaAgent)
   .settings(commonSettings(projectName) *)
   .settings(buildSettings(projectName))
+  .settings(dockerSettings(Seq(6600)))
   .settings(
     libraryDependencies ++= Dependencies.dependencies,
     Compile / mainClass := Some("json.transformation.application.Loader")
@@ -43,4 +44,14 @@ def buildSettings(module: String) = Seq(
   buildInfoKeys := Seq[BuildInfoKey](name, version, scalaVersion, sbtVersion),
   buildInfoPackage := s"json.transformation",
   buildInfoOptions += BuildInfoOption.BuildTime
+)
+
+
+def dockerSettings(ports: Seq[Int]) = Seq(
+  Docker / maintainer := "json transformation",
+  packageName := s"${projectName}",
+  dockerBaseImage := "ghcr.io/graalvm/jdk-community:21",
+  dockerRepository := Some("cr.mesoor.com/production"),
+  dockerUsername := None,
+  dockerExposedPorts := ports
 )

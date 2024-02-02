@@ -122,16 +122,18 @@ object JsContextPool {
           .apply(0, poolSize)
           .map(n => s"js-context-pool-${n}")
 
-        jsContexts <- ZIO.foreachPar(
-          ids
-        )(id =>
-          for {
-            context <- JsContext.created
+        jsContexts <- ZIO
+          .foreachPar(
+            ids
+          )(id =>
+            for {
+              context <- JsContext.created
 
-            _ <- ZIO.logInfo(s"init js context id:${id} success!")
+              _ <- ZIO.logInfo(s"init js context id:${id} success!")
 
-          } yield JsContext(id = id, context = context)
-        ).withParallelism(64)
+            } yield JsContext(id = id, context = context)
+          )
+          .withParallelism(64)
 
         res <- Ref.make(
           jsContexts.toVector
