@@ -11,6 +11,7 @@ object Dependencies {
     val tapir = "1.1.3"
     val http4s = "0.23.23"
     val polyglot = "23.1.2"
+    val fs2Data = "1.10.0"
   }
 
   val zioLogging = Seq(
@@ -72,6 +73,12 @@ object Dependencies {
     "com.softwaremill.sttp.tapir" %% "tapir-swagger-ui-bundle"
   ).map(_ % Versions.tapir)
 
+  val fs2Data = Seq(
+    "org.gnieh" %% "fs2-data-csv",
+    "org.gnieh" %% "fs2-data-csv-generic",
+    "org.gnieh" %% "fs2-data-text"
+  ) map (_ % Versions.fs2Data)
+
   val dependencies =
-    logging ++ scalaTest ++ zioTest ++ zioConfig ++ zioCore ++ zioCore ++ zioNio ++ circeCore ++ circeCore ++ polyglot ++ tapir ++ http4sServer
+    logging ++ scalaTest ++ zioTest ++ zioConfig ++ zioCore ++ zioCore ++ zioNio ++ circeCore ++ circeCore ++ polyglot ++ tapir ++ http4sServer ++ fs2Data
 }

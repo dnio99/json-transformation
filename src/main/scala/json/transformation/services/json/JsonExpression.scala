@@ -1,4 +1,4 @@
-package json.transformation.services
+package json.transformation.services.json
 
 import com.oracle.truffle.js.lang.JavaScriptLanguage.ID
 import io.circe.Json
@@ -8,7 +8,7 @@ import zio.ZIO
 
 import java.util.function.Consumer
 
-case class JsonExpression(
+final case class JsonExpression(
     json: Json
 ) {
 
