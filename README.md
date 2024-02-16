@@ -4,6 +4,7 @@
 
 Json转换，封装[jsonata](https://jsonata.org/)，采用graalvm集成js模块。
 
+## Json转换
 
 请求示例：
 ```shell
@@ -86,4 +87,112 @@ curl --location 'http://localhost:6600/v1/transformations' \
     },
     "expression": "{\"dd\": $sum(Account.Order.Product.(Price * Quantity))}"
 }'
+```
+
+返回结果：
+```json
+{"dd":336.36}
+```
+
+## csv To Json
+
+csv格式须知：
+- 第一行是无意义，可以用于中文名字等
+- 第二行是jsonata语法，可以用于对数据格式化等转换
+- 第三行是json path路径，也就是json具体格式的定义
+
+```shell
+curl --location 'http://localhost:6600/v1/transformations/csv' \
+--header 'accept: application/octet-stream' \
+--header 'Content-Type: application/octet-stream' \
+--data '@test.csv'
+```
+返回结果
+```json
+[
+    {
+        "humanInfo": {
+            "name": "John",
+            "name1": "Doe"
+        },
+        "test1": "120 jefferson st.",
+        "contact": {
+            "address": "Riverside"
+        },
+        "test2": " NJ",
+        "numbers": [
+            8075
+        ]
+    },
+    {
+        "humanInfo": {
+            "name": "Jack",
+            "name1": "McGinnis"
+        },
+        "test1": "220 hobo Av.",
+        "contact": {
+            "address": "Phila"
+        },
+        "test2": " PA",
+        "numbers": [
+            9119
+        ]
+    },
+    {
+        "humanInfo": {
+            "name": "John \"Da Man\"",
+            "name1": "Repici"
+        },
+        "test1": "120 Jefferson St.",
+        "contact": {
+            "address": "Riverside"
+        },
+        "test2": " NJ",
+        "numbers": [
+            8075
+        ]
+    },
+    {
+        "humanInfo": {
+            "name": "Stephen",
+            "name1": "Tyler"
+        },
+        "test1": "7452 Terrace \"At the Plaza\" road",
+        "contact": {
+            "address": "SomeTown"
+        },
+        "test2": "SD",
+        "numbers": [
+            91234
+        ]
+    },
+    {
+        "humanInfo": {
+            "name": "",
+            "name1": "Blankman"
+        },
+        "test1": "",
+        "contact": {
+            "address": "SomeTown"
+        },
+        "test2": " SD",
+        "numbers": [
+            298
+        ]
+    },
+    {
+        "humanInfo": {
+            "name": "\"Joan \"\"the bone\"\"",
+            "name1": " Anne\""
+        },
+        "test1": "Jet",
+        "contact": {
+            "address": "\"9th"
+        },
+        "test2": " at Terrace plc\"",
+        "numbers": [
+            null
+        ]
+    }
+]
 ```

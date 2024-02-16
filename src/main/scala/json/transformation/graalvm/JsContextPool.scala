@@ -67,6 +67,8 @@ object JsContext {
 
     _ <- loadJsFile("jsonata.min.js", jsContext)
 
+    _ <- loadJsFile("lodash.js", jsContext)
+
   } yield jsContext
 
 }

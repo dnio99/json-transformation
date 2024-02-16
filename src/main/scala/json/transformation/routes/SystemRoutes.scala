@@ -75,11 +75,9 @@ object SystemRoutes {
 
   private def csvToJsonTransformationLogic(
       input: ZStream[Any, Throwable, Byte]
-  ) = {
-    ZIO.succeed(
-      CsvToJson.transfer(
-        input
-      )
+  ): ZIO[Js, DomainErrors.DomainError, ZStream[Any, Throwable, Byte]] = {
+    CsvToJson.transfer(
+      input
     )
   }
 
