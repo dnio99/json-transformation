@@ -39,7 +39,7 @@ object CsvToJson {
           DomainErrors.InternalServerError(description = Some(e.getMessage))
         )
 
-      csvExpressionList <- defaultHeaders.map(_.values.toList) match {
+      csvExpressionList <- (defaultHeaders.map(_.values.toList) match {
         case List(headers, jsonExpressions, filedExpressions) => {
           ZIO succeed (headers zip (jsonExpressions).zip(filedExpressions))
             .map { case (csvHeader, (jsonExpression, fieldExpression)) =>
@@ -51,7 +51,8 @@ object CsvToJson {
             }
         }
         case _ => ZIO fail DomainErrors.BadRequest("错误csv to json格式！")
-      }
+      })
+        .tapError(e => ZIO.logWarning(e.toString))
 
       js <- ZIO.service[Js]
       stream = csvStream
@@ -98,7 +99,9 @@ object CsvToJson {
       )
     } yield res
 
-    ZIO.serviceWithZIO[Js](_.transaction(io))
+    ZIO
+      .serviceWithZIO[Js](_.transaction(io))
+      .tapError(e => ZIO.logWarning(e.toString))
 
   }
 
