@@ -3,6 +3,7 @@ package json.transformation.services.csv
 import io.circe.Json
 import io.circe.generic.JsonCodec
 import json.transformation.graalvm.JsContext
+import json.transformation.services.csv.CsvExpression.CirceOps
 import json.transformation.services.json.{JsonExpression, JsonPathValuePair}
 import zio.ZIO
 
@@ -24,7 +25,7 @@ final case class CsvExpression(
 
   def handle(
       value: String
-  ): ZIO[JsContext, Throwable, JsonPathValuePair] = {
+  ): ZIO[JsContext, Throwable, Option[JsonPathValuePair]] = {
     val originJson = Json.fromString(value)
     for {
 
@@ -36,12 +37,45 @@ final case class CsvExpression(
           ZIO.succeed(originJson)
         )
 
-    } yield JsonPathValuePair(
-      key = fieldExpression,
-      value = json
-    )
+    } yield
+      if (json.isDefine) {
+        Some(
+          JsonPathValuePair(
+            key = fieldExpression,
+            value = json
+          )
+        )
+      } else {
+        None
+      }
   }
 
 }
 
-object CsvExpression {}
+object CsvExpression {
+
+  implicit class CirceOps(val json: Json) extends AnyVal {
+
+    def isDefine: Boolean = {
+
+      if (json.isNull) {
+        false
+      } else {
+        (
+          json.isString,
+          json.isArray,
+          json.isObject
+        ) match {
+          case (true, _, _) =>
+            json.asString.exists(_.nonEmpty)
+          case (_, true, _) => json.asArray.exists(_.nonEmpty)
+          case (_, _, true) => json.asObject.exists(_.nonEmpty)
+          case _            => true
+
+        }
+      }
+
+    }
+
+  }
+}

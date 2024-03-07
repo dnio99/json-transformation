@@ -57,7 +57,7 @@ object CsvToJson {
       stream = csvStream
         .toZStream()
         .drop(3)
-        .mapZIOPar(128)(row => handleRow(csvExpressionList, row))
+        .mapZIOPar(32)(row => handleRow(csvExpressionList, row))
         .map(_.noSpaces)
         .intersperse(",")
         .via(
@@ -91,6 +91,7 @@ object CsvToJson {
             csvExpression.handle(value)
           }
         }
+        .map(_.flatten)
 
       res <- JsonPathValuePairHandle(
         jsonPathValuePairs

@@ -54,11 +54,13 @@ object JsonPathValuePairHandle {
         )
       )
 
-      jsonRes <- ZIO.fromEither(
-        parse(
-          buildJsonObject.execute(jsonPathValuePairs.asJson.noSpaces).toString
+      jsonRes <- ZIO
+        .fromEither(
+          parse(
+            buildJsonObject.execute(jsonPathValuePairs.asJson.noSpaces).toString
+          )
         )
-      )
+        .map(_.deepDropNullValues)
 
     } yield jsonRes
   }
