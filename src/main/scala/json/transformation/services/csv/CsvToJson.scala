@@ -87,10 +87,8 @@ object CsvToJson {
       jsonPathValuePairs <- ZIO
         .foreach(
           (csvExpressions zip values)
-        ) {
-          case (csvExpression, value) => {
-            csvExpression.handle(value)
-          }
+        ) { case (csvExpression, value) =>
+          csvExpression.handle(value)
         }
         .map(_.flatten)
 

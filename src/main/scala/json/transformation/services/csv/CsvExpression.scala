@@ -31,6 +31,11 @@ final case class CsvExpression(
 
       json <- jsonExpression
         .map(
+          _.stripPrefix("\"")
+            .stripSuffix("\"")
+            .replaceAll("\"+", "")
+        )
+        .map(
           JsonExpression(originJson).evaluate
         )
         .getOrElse(
