@@ -27,7 +27,7 @@ object CsvToJson {
       .through(
         text.utf8.decode
       )
-      .through(lowlevel.rows[Task, String](',', QuoteHandling.Literal))
+      .through(lowlevel.rows[Task, String](',', QuoteHandling.RFCCompliant))
 
     for {
 
